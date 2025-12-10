@@ -1,6 +1,14 @@
 local map = vim.keymap.set
 
-map('n', '<Esc>', '<cmd>nohlsearch<CR>')
+map('n', '<Esc>', function()
+  vim.cmd 'nohlsearch'
+  local inactive_floating_wins = vim.fn.filter(vim.api.nvim_list_wins(), function(_, v)
+    return vim.api.nvim_win_get_config(v).relative ~= '' and v ~= vim.api.nvim_get_current_win()
+  end)
+  for _, w in ipairs(inactive_floating_wins) do
+    pcall(vim.api.nvim_win_close, w, false)
+  end
+end)
 map('n', '<leader>tr', '<cmd>set rnu!<CR>', { desc = 'Toggle relative line number' })
 
 -- Exec lua
