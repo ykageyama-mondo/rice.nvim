@@ -1,10 +1,9 @@
--- debug.lua
---
--- Shows how to use the DAP plugin to debug your code.
---
--- Primarily focused on configuring the debugger for Go, but can
--- be extended to other languages as well. That's why it's called
--- kickstart.nvim and not kitchen-sink.nvim ;)
+local js_based_languages = {
+  'typescript',
+  'javascript',
+  'typescriptreact',
+  'javascriptreact',
+}
 
 return {
   -- NOTE: Yes, you can install new plugins here!
@@ -95,9 +94,87 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'js-debug-adapter',
+      },
+    }
+    local mason_root = require('mason.settings').current.install_root_dir
+    debugger_path = vim.fn.resolve(mason_root .. '/bin/js-debug-adapter')
+    vim.print(debugger_path)
+    -- 'chrome',
+    -- 'pwa-node',
+    -- 'pwa-chrome',
+    -- 'pwa-msedge',
+    -- 'pwa-extensionHost',
+    -- 'node-terminal',
+    require('dap').adapters['pwa-node'] = {
+      type = 'server',
+      host = 'localhost',
+      port = '${port}',
+      executable = {
+        command = debugger_path,
+        args = { '${port}' },
       },
     }
 
+    for _, language in ipairs(js_based_languages) do
+      require('dap').configurations[language] = {
+        {
+          type = 'pwa-node',
+          request = 'attach',
+          name = 'Attach to running node process',
+          processId = require('dap.utils').pick_process,
+          cwd = '${workspaceFolder}',
+        },
+        {
+          name = 'Debug current Jest file',
+          type = 'pwa-node',
+          request = 'launch',
+          program = '${workspaceFolder}/node_modules/jest/bin/jest.js', -- Path to your project's jest executable
+          cwd = '${workspaceFolder}',
+          -- Arguments to pass to Jest
+          args = {
+            '${file}', -- The current test file
+            '--runTestsByPath',
+            '--verbose',
+            '--bail',
+            '--no-cache',
+            '-i', -- Run tests in band (prevents parallel test issues with debugging)
+            '--testTimeout=9999999',
+          },
+          console = 'integratedTerminal', -- Use Neovim's terminal for output
+          sourceMaps = true,
+          internalConsoleOptions = 'neverOpen',
+          resolveSourceMaps = true,
+          skipFiles = {
+            '<node_internals>/**',
+            'node_modules/**',
+          },
+        },
+        {
+          name = 'Debug all Jest tests',
+          type = 'pwa-node',
+          request = 'launch',
+          program = '${workspaceFolder}/node_modules/jest/bin/jest.js', -- Path to your project's jest executable
+          cwd = '${workspaceFolder}',
+          -- Arguments to pass to Jest
+          args = {
+            '--verbose',
+            '--bail',
+            '--no-cache',
+            '-i', -- Run tests in band (prevents parallel test issues with debugging)
+            '--testTimeout=9999999',
+          },
+          console = 'integratedTerminal', -- Use Neovim's terminal for output
+          sourceMaps = true,
+          internalConsoleOptions = 'neverOpen',
+          resolveSourceMaps = true,
+          skipFiles = {
+            '<node_internals>/**',
+            'node_modules/**',
+          },
+        },
+      }
+    end
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
@@ -121,16 +198,16 @@ return {
     }
 
     -- Change breakpoint icons
-    -- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
-    -- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
-    -- local breakpoint_icons = vim.g.have_nerd_font
-    --     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
-    --   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
-    -- for type, icon in pairs(breakpoint_icons) do
-    --   local tp = 'Dap' .. type
-    --   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
-    --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
-    -- end
+    vim.api.nvim_set_hl(0, 'DapStop', { fg = '#99c5c4' })
+    vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#f2e6b1' })
+    local breakpoint_icons = vim.g.have_nerd_font
+        and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
+      or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
+    for type, icon in pairs(breakpoint_icons) do
+      local tp = 'Dap' .. type
+      local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
+      vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+    end
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
