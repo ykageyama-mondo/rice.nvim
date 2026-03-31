@@ -29,6 +29,12 @@ return {
       formatters_by_ft = {
         lua = { 'stylua' },
         zig = { 'zigfmt' },
+        cs = { 'csharpier' },
+      },
+      csharpier = {
+        command = 'dotnet-csharpier',
+        args = { '--write-stdout' },
+        stdin = true,
       },
     },
   },
@@ -69,23 +75,27 @@ return {
         opts = {},
       },
       'folke/lazydev.nvim',
+      'fang2hou/blink-copilot',
     },
     --- @module 'blink.cmp'
     --- @type blink.cmp.Config
     opts = {
-      keymap = {
-        preset = 'super-tab',
-      },
       appearance = {
         nerd_font_variant = 'mono',
       },
       sources = {
-        default = { 'lsp', 'path', 'snippets' },
+        default = { 'lsp', 'path', 'snippets', 'copilot' },
         per_filetype = {
           lua = { inherit_defaults = true, 'lazydev' },
         },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+          copilot = {
+            name = 'copilot',
+            module = 'blink-copilot',
+            score_offset = 100,
+            async = true,
+          },
         },
       },
       fuzzy = { implementation = 'prefer_rust_with_warning' },

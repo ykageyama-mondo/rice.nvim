@@ -8,7 +8,45 @@ return {
       },
     },
   },
-
+  {
+    'GustavEikaas/easy-dotnet.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim' },
+    config = function()
+      require('easy-dotnet').setup {
+        lsp = {
+          auto_refresh_codelens = false,
+        },
+      }
+    end,
+  },
+  {
+    'seblyng/roslyn.nvim',
+    config = function()
+      require('roslyn').setup()
+      vim.lsp.config('roslyn_ls', {
+        settings = {
+          ['csharp|code_lens'] = {
+            dotnet_enable_references_code_lens = false,
+            dotnet_enable_tests_code_lens = false,
+          },
+          ['csharp|inlay_hints'] = {
+            csharp_enable_inlay_hints_for_implicit_object_creation = false,
+            csharp_enable_inlay_hints_for_implicit_variable_types = false,
+            csharp_enable_inlay_hints_for_lambda_parameter_types = false,
+            csharp_enable_inlay_hints_for_types = false,
+            dotnet_enable_inlay_hints_for_indexer_parameters = false,
+            dotnet_enable_inlay_hints_for_literal_parameters = false,
+            dotnet_enable_inlay_hints_for_object_creation_parameters = false,
+            dotnet_enable_inlay_hints_for_other_parameters = false,
+            dotnet_enable_inlay_hints_for_parameters = false,
+            dotnet_suppress_inlay_hints_for_parameters_that_differ_only_by_suffix = false,
+            dotnet_suppress_inlay_hints_for_parameters_that_match_argument_name = false,
+            dotnet_suppress_inlay_hints_for_parameters_that_match_method_intent = false,
+          },
+        },
+      })
+    end,
+  },
   {
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -26,7 +64,6 @@ return {
           },
         },
       },
-
       'saghen/blink.cmp',
     },
     config = function()
