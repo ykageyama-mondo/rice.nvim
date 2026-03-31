@@ -13,6 +13,7 @@ vim.o.signcolumn = 'yes'
 -- UI
 vim.opt.termguicolors = true
 vim.o.showmode = false
+vim.o.winborder = 'rounded'
 
 -- Behaviour
 vim.schedule(function()
@@ -24,6 +25,7 @@ vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 vim.o.mouse = 'a'
 vim.o.confirm = true
+vim.o.autoread = true
 
 -- Identation
 vim.o.breakindent = true
