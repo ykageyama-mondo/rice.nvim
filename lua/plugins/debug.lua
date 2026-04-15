@@ -33,6 +33,13 @@ return {
       desc = 'Debug: Start/Continue',
     },
     {
+      '<F6>',
+      function()
+        require('dap').terminate()
+      end,
+      desc = 'Debug: Terminate',
+    },
+    {
       '<F1>',
       function()
         require('dap').step_into()

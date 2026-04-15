@@ -16,7 +16,14 @@ return {
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
-        local disable_filetypes = { c = true, cpp = true, javascript = true, typescript = true, typescriptreact = true, javapscriptreact = true }
+        local disable_filetypes = {
+          c = true,
+          cpp = true,
+          javascript = true,
+          typescript = true,
+          typescriptreact = true,
+          javapscriptreact = true,
+        }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
@@ -29,12 +36,7 @@ return {
       formatters_by_ft = {
         lua = { 'stylua' },
         zig = { 'zigfmt' },
-        cs = { 'csharpier' },
-      },
-      csharpier = {
-        command = 'dotnet-csharpier',
-        args = { '--write-stdout' },
-        stdin = true,
+        cucumber = { 'reformat-gherkin' },
       },
     },
   },

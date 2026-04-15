@@ -5,7 +5,6 @@ return {
     opts = function()
       return {
         options = {
-          theme = 'catppuccin',
           section_separators = { left = '', right = '' },
           component_separators = { left = '|', right = '|' },
         },
@@ -17,6 +16,22 @@ return {
     cmd = { 'NvimTreeToggle', 'NvimTreeFocus' },
     opts = function()
       return {
+        on_attach = function(bufnr)
+          local api = require 'nvim-tree.api'
+          api.map.on_attach.default(bufnr)
+          vim.keymap.set('n', '<leader>e', function()
+            local winid = api.tree.winid()
+            if winid ~= nil then
+              if vim.api.nvim_get_current_win() == winid then
+                api.tree.close()
+              else
+                api.tree.focus()
+              end
+            else
+              api.tree.open()
+            end
+          end, { desc = 'nvimtree focus window' })
+        end,
         filters = { dotfiles = false },
         disable_netrw = true,
         hijack_cursor = true,
@@ -26,11 +41,18 @@ return {
           update_root = false,
         },
         view = {
-          width = 30,
+          width = {
+            min = 30,
+          },
           preserve_window_proportions = true,
         },
         live_filter = {
           prefix = '',
+        },
+        actions = {
+          open_file = {
+            quit_on_open = true,
+          },
         },
         renderer = {
           root_folder_label = false,
@@ -101,7 +123,13 @@ return {
   {
     'rcarriga/nvim-notify',
     config = function()
-      vim.notify = require 'notify'
+      local notify = require 'notify'
+      notify.setup {
+        merge_duplicates = true,
+        render = 'compact',
+        timeout = 1000,
+      }
+      vim.notify = notify
     end,
   },
 }

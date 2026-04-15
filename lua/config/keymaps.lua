@@ -19,9 +19,6 @@ map('n', '<leader>xx', ':luafile %<CR>', { desc = 'Execute current luafile' })
 map('n', '\\', '<cmd>NvimTreeToggle<CR>', { desc = 'nvimtree toggle window' })
 map('n', '<leader>e', '<cmd>NvimTreeFocus<CR>', { desc = 'nvimtree focus window' })
 
--- Terminal
-map('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-
 -- Window
 map('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 map('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
@@ -30,3 +27,8 @@ map('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Diagnostics
 map('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Open diagnostic floating window' })
+
+-- Clipboard
+map({ 'n', 'v' }, '<leader>y', [["+y]])
+map({ 'n', 'v' }, '<leader>yy', [["+yy]])
+map({ 'n', 'v' }, '<leader>Y', [["+Y]])

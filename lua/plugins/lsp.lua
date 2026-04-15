@@ -77,6 +77,7 @@ return {
 
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
           map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+          map('gi', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
           map('<leader>gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
           map('<leader>gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
@@ -179,6 +180,7 @@ return {
         tailwindcss = {},
         html = {},
         ts_ls = {},
+        cucumber_language_server = {},
 
         lua_ls = {
           settings = {
@@ -200,13 +202,11 @@ return {
       vim.list_extend(ensure_installed, {
         'stylua',
       })
-      require('mason-lspconfig').setup {
-        automatic_enable = vim.tbl_keys(servers or {}),
-      }
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       for name, config in pairs(servers) do
         vim.lsp.config(name, config)
+        vim.lsp.enable(name)
       end
     end,
   },

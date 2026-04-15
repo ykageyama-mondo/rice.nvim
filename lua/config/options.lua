@@ -16,9 +16,7 @@ vim.o.showmode = false
 vim.o.winborder = 'rounded'
 
 -- Behaviour
-vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
-end)
+vim.o.maxsearchcount = 999
 vim.o.undofile = true
 vim.o.backup = false
 vim.o.updatetime = 250
