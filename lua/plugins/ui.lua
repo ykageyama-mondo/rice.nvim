@@ -128,8 +128,14 @@ return {
         merge_duplicates = true,
         render = 'compact',
         timeout = 1000,
+        background_colour = '#000000',
       }
-      vim.notify = notify
+      vim.notify = function(msg, level, opts)
+        if type(msg) == 'string' and (msg:find 'ENOSPC' or msg:find '[Ii]notify' or msg:find '[Ww]atch.*[Ll]imit') then
+          return
+        end
+        notify(msg, level, opts)
+      end
     end,
   },
 }

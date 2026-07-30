@@ -22,7 +22,9 @@ return {
   {
     'seblyng/roslyn.nvim',
     config = function()
-      require('roslyn').setup()
+      require('roslyn').setup {
+        filewatching = 'auto',
+      }
       vim.lsp.config('roslyn_ls', {
         settings = {
           ['csharp|code_lens'] = {
@@ -53,7 +55,7 @@ return {
       { 'mason-org/mason.nvim', opts = {} },
       'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-
+      'b0o/schemastore.nvim',
       {
         'j-hui/fidget.nvim',
         opts = {
@@ -76,7 +78,11 @@ return {
           end
 
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-          map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+          map('gr', function()
+            require('telescope.builtin').lsp_references {
+              default_text = '!import',
+            }
+          end, '[G]oto [R]eferences')
           map('gi', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
           map('<leader>gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
           map('<leader>gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
@@ -180,7 +186,17 @@ return {
         tailwindcss = {},
         html = {},
         ts_ls = {},
+        jsonls = {
+          settings = {
+            json = {
+              schemas = require('schemastore').json.schemas(),
+              validate = { enable = true },
+            },
+          },
+        },
         cucumber_language_server = {},
+
+        jedi_language_server = {},
 
         lua_ls = {
           settings = {

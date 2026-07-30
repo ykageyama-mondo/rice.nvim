@@ -1,0 +1,14 @@
+{
+  "name": "personal-snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "javascript",
+          "typescript"
+        ],
+        "path": "./node.json"
+      }
+    ]
+  }
+}

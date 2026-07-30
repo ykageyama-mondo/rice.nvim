@@ -1,0 +1,15 @@
+{
+  "clg": {
+    "prefix": "clg",
+    "body": [
+      "console.log(`🫠 $TM_FILENAME L$TM_LINE_NUMBER: \\${${1:$message}\\}`);"
+    ]
+  },
+  "clt": {
+    "prefix": "clt",
+    "body": [
+      "console.time('${1:label}');",
+      "console.timeEnd('${1:label}');"
+    ]
+  }
+}

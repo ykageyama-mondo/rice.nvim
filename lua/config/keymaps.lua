@@ -9,7 +9,13 @@ map('n', '<Esc>', function()
     pcall(vim.api.nvim_win_close, w, false)
   end
 end)
+
+-- Toggle
 map('n', '<leader>tr', '<cmd>set rnu!<CR>', { desc = 'Toggle relative line number' })
+
+-- Save
+map('n', '<C-s>', '<cmd>update<CR>', { desc = 'Save' })
+map('n', '<leader>w', '<cmd>update<CR>', { desc = 'Save' })
 
 -- Exec lua
 map('v', '<leader>x', ':lua<CR>', { desc = 'Execute selected lua' })
@@ -30,5 +36,4 @@ map('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Open diagnostic float
 
 -- Clipboard
 map({ 'n', 'v' }, '<leader>y', [["+y]])
-map({ 'n', 'v' }, '<leader>yy', [["+yy]])
-map({ 'n', 'v' }, '<leader>Y', [["+Y]])
+map({ 'n', 'v' }, '<leader>Y', [["+y$]])

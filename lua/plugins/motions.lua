@@ -3,11 +3,10 @@ return {
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
-      delay = 0,
+      delay = 500,
       icons = {
         mappings = vim.g.have_nerd_font,
       },
-
       spec = {
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
@@ -77,6 +76,13 @@ return {
       vim.keymap.set('n', '<leader>9', function()
         harpoon:list():select(9)
       end)
+    end,
+  },
+  {
+    'https://codeberg.org/andyg/leap.nvim.git',
+    config = function()
+      vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)')
+      vim.keymap.set('n', 'S', '<Plug>(leap-from-window)')
     end,
   },
 }

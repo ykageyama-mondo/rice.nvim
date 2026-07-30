@@ -6,7 +6,7 @@ vim.g.loaded_netrwPlugin = 1
 
 -- Gutter
 vim.o.number = true
-vim.o.relativenumber = true
+vim.o.relativenumber = false
 vim.o.ruler = false
 vim.o.signcolumn = 'yes'
 
@@ -49,3 +49,4 @@ vim.o.cursorline = true
 vim.o.cursorlineopt = 'both'
 vim.o.scrolloff = 15
 vim.opt.whichwrap:append '<>[]hl'
+vim.opt.matchpairs:append '<:>'

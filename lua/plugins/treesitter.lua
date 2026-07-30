@@ -42,6 +42,12 @@ return {
         end
       end
 
+      -- Set the fold method to use an expression
+      vim.opt.foldmethod = 'expr'
+      -- Set the expression to use Tree-sitter's folding logic
+      vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+      vim.opt.foldlevelstart = 99
+
       local available_parsers = require('nvim-treesitter').get_available()
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)

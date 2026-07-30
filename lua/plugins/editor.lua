@@ -46,11 +46,28 @@ return {
     opts = {
       focus = true,
       warn_no_results = false,
+      modes = {
+        cascade = {
+          mode = 'diagnostics', -- inherit from diagnostics mode
+          filter = function(items)
+            local severity = vim.diagnostic.severity.HINT
+            for _, item in ipairs(items) do
+              severity = math.min(severity, item.severity)
+            end
+            return vim.tbl_filter(function(item)
+              return item.severity == severity
+            end, items)
+          end,
+        },
+      },
     },
     keys = {
       {
         '<leader>q',
-        '<cmd>Trouble diagnostics toggle<CR>',
+        function()
+          require('trouble').toggle 'cascade'
+        end,
+        desc = 'Diagnostics (Trouble cascade mode)',
       },
     },
   },
@@ -74,10 +91,9 @@ return {
             end,
           },
         },
-        opts = {},
       },
       'folke/lazydev.nvim',
-      'fang2hou/blink-copilot',
+      -- 'fang2hou/blink-copilot',
     },
     --- @module 'blink.cmp'
     --- @type blink.cmp.Config
@@ -86,18 +102,23 @@ return {
         nerd_font_variant = 'mono',
       },
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'copilot' },
+        default = {
+          'lsp',
+          'path',
+          'snippets',
+          -- 'copilot',
+        },
         per_filetype = {
           lua = { inherit_defaults = true, 'lazydev' },
         },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
-          copilot = {
-            name = 'copilot',
-            module = 'blink-copilot',
-            score_offset = 100,
-            async = true,
-          },
+          -- copilot = {
+          --   name = 'copilot',
+          --   module = 'blink-copilot',
+          --   score_offset = 100,
+          --   async = true,
+          -- },
         },
       },
       fuzzy = { implementation = 'prefer_rust_with_warning' },
@@ -131,5 +152,31 @@ return {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     opts = {},
+  },
+
+  {
+    'windwp/nvim-ts-autotag',
+    event = {
+      'BufReadPre',
+      'BufNewFile',
+    },
+    config = function()
+      require('nvim-ts-autotag').setup {
+        opts = {
+          enable_close = true, -- Auto close tags
+          enable_rename = true, -- Auto rename pairs of tags
+          enable_close_on_slash = false, -- Auto close on trailing </
+        },
+      }
+    end,
+  },
+
+  'pteroctopus/faster.nvim',
+  {
+    'kevinhwang91/nvim-bqf',
+    dependencies = {
+      'junegunn/fzf',
+      'nvim-treesitter/nvim-treesitter',
+    },
   },
 }
